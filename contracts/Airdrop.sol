@@ -7,10 +7,10 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract Airdrop {
-  address baycNFTCONAddress;
-  address distributingTokenAddress;
-  bytes32 rootHash;
-  address airdropInitiator;
+  address public baycNFTCONAddress;
+  address public distributingTokenAddress;
+  bytes32 public rootHash;
+  address public airdropInitiator;
 
   struct AirdropParticipantDetails {
     uint256 nonFungTokenCount;
