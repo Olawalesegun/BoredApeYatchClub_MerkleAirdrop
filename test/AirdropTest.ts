@@ -24,14 +24,14 @@ describe("Airdrop", function () {
     distributingToken = await AirdropTokenFactory.deploy() as AirdropToken;
     merkleRoot = ethers.keccak256(ethers.defaultAbiCoder.encode(["address", "uint256"], [user1.address, amount]));
     const AirdropFactory = await ethers.getContractFactory("Airdrop");
-    airdrop = await AirdropFactory.deploy(distributingToken.address, merkleRoot) as Airdrop;
+    airdrop = await AirdropFactory.deploy(distributingToken.getAddress(), merkleRoot) as Airdrop;
     await distributingToken.transfer(airdrop.getAddress(), amount);
   });
 
   it("should allow a user to claim an airdrop if eligible", async function () {
     await distributingToken.approve(airdrop.getAddress(), amount);
     await airdrop.connect(user1).claimAirdrop(amount, [merkleRoot]);
-    const participant = await airdrop.participants(user1.address);
+    const participant = await airdrop.participants(user1.getAddress());
     expect(participant.tokenReceived).to.equal(amount);
     expect(participant.userCanReceiveAirdrop).to.be.true;
   });
@@ -41,7 +41,7 @@ describe("Airdrop", function () {
   });
 
   it("should revert when user tries to claim twice", async function () {
-    await distributingToken.approve(airdrop.address, amount);
+    await distributingToken.approve(airdrop.getAddress(), amount);
     await airdrop.connect(user1).claimAirdrop(amount, [merkleRoot]);
     await expect(airdrop.connect(user1).claimAirdrop(amount, [merkleRoot])).to.be.revertedWith("YouHaveClaimedAlready");
   });
@@ -51,7 +51,7 @@ describe("Airdrop", function () {
   });
 
   it("should revert when claiming with an invalid merkle proof", async function () {
-    await distributingToken.approve(airdrop.address, amount);
+    await distributingToken.approve(airdrop.getAddress(), amount);
     await expect(airdrop.connect(user1).claimAirdrop(amount, ["invalid_proof"])).to.be.revertedWith("NotEligibleForAirdrop");
   });
 
