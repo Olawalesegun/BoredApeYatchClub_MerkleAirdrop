@@ -16,7 +16,7 @@ describe("Airdrop", function () {
   let user1: SignerWithAddress;
   let user2: SignerWithAddress;
   let merkleRoot: string;
-  const amount = ethers.utils.parseEther("10");
+  const amount = ethers.parseEther("10");
 
   beforeEach(async function () {
     [owner, user1, user2] = await ethers.getSigners();
