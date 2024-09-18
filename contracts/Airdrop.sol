@@ -81,6 +81,9 @@ contract Airdrop {
     }
 
     function verifyUserNFTClaim() external view returns (bool) {
+      if(msg.sender == address(0)){
+        revert AddressZeroCannotBeAllowed();
+      }
         return ownsBAYCNFT(msg.sender);
     }
 }
