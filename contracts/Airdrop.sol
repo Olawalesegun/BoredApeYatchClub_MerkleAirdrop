@@ -18,7 +18,7 @@ contract Airdrop {
     bool userCanReceiveAirdrop;
   }
 
-  mapping(address => AirdropParticipantDetails) participants;
+  mapping(address => AirdropParticipantDetails) public participants;
 
   error AddressZeroCannotBeAllowed();
   error AmountIsNotValid();

@@ -23,6 +23,7 @@ describe("Airdrop", function () {
     // const TOKEN = 0x29E7b72825E0F593f22487fA87230A68BCF0DCDD;
     // const tokenAddress = await ethers.getImpersonatedSigner("0x011fa9c75858236ea7254e8e17ac66e6acce14e3ab099bcaec7544c5de36bcb0");
     const { token }= await loadFixture(deployAirdropToken);
+    const [owner] = await ethers.getSigners();
     const REWARDING_TOKEN_ADDRESS = token.getAddress();
     const confirmedAirdropReceiver = await ethers.getImpersonatedSigner("0x11aF10451E3d86fD95E83443dbe0581F4532744B");
 
@@ -46,7 +47,8 @@ describe("Airdrop", function () {
       airdpCn,
       airdropReceiverProof,
       BAYCADDRESS,
-      tokenToBeDistributed
+      tokenToBeDistributed,
+      owner
     }
   }
 
@@ -61,9 +63,31 @@ describe("Airdrop", function () {
       const { BAYCADDRESS, airdpCn} = await loadFixture(deployAsGlobal);
       const ardropBayc = await airdpCn.baycNFTCONAddress();
 
-      expect(ardropBayc).to.equal(ardropBayc);
+      expect(ardropBayc).to.equal(BAYCADDRESS);
     })
-  })
+
+    it("should test to confirm the RootHash", async function(){
+      const {airdpCn, merkleRoot} = await loadFixture(deployAsGlobal);
+      const airdrpBayc = await airdpCn.rootHash();
+
+      expect(airdrpBayc).to.equal(merkleRoot);
+    })
+
+    it("should test to confirm the initiator", async function(){
+      const {airdpCn, owner} = await loadFixture(deployAsGlobal);
+      const airdrpBayc = await airdpCn.airdropInitiator();
+
+      expect(airdrpBayc).to.equal(owner);
+    })
+
+    it("should test to confirm the content of the map upon deployment is empty", async function(){
+      const {airdpCn} = await loadFixture(deployAsGlobal);
+      const [owner, signer1] = await ethers.getSigners();
+      const airdrp = await airdpCn.participants(signer1.address);
+
+      expect(airdrp.nonFungTokenCount).to.be.equal(0);
+    })
+  }) 
 
   // it("should test deployment", async function(){
   //   const { TOKEN, tokenAddress, merkleRoot, airdropCon }= await loadFixture(deployAsGlobal);
